@@ -2,11 +2,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <dirent.h>
+#include <stdint.h>
+#include "card.h"
 
-typedef struct {
-	char* name;
-	size_t index;
-} INDEX_T;
 void append_and_close_into_file(FILE * input_file, FILE * output_file);
 
 int main(int argc, char * argv[]) {
@@ -20,7 +18,7 @@ int main(int argc, char * argv[]) {
         return 1;
     }
 	char * file_path = malloc(4096);
-    int pkm_count = 0;
+    size_t pkm_count = 0;
 	INDEX_T **indexes = malloc(sizeof(*indexes) * pkm_count);
 	struct dirent* entry;
 	// read through every file in the directory
@@ -39,6 +37,7 @@ int main(int argc, char * argv[]) {
 				pkm->index = ftell(fp_ascii);
 				fseek(fp_single, 0, SEEK_END);
 			    file_len = ftell(fp_single);
+                fseek(fp_single, 0, SEEK_SET);
 				fwrite(&file_len, sizeof(file_len), 1, fp_ascii);
 				append_and_close_into_file(fp_single, fp_ascii);
 				indexes = realloc(indexes, sizeof(*indexes) * ++pkm_count);
@@ -51,13 +50,13 @@ int main(int argc, char * argv[]) {
     }
 	// writing cards to index.bin also freeing
 	FILE * fp_index = fopen("indexes.bin", "wb");
-	fwrite(&pkm_count, sizeof(pkm_count), 1, fp_index);
+	fwrite(&pkm_count, sizeof(uint64_t), 1, fp_index);
 	size_t name_len;
    	for (int i=0; i < pkm_count; i++) {
 		name_len = strlen(indexes[i]->name);
-		fwrite(&name_len, sizeof(name_len), 1, fp_index);
+		fwrite(&name_len, sizeof(uint64_t), 1, fp_index);
 		fwrite(indexes[i]->name, 1, name_len, fp_index);
-		fwrite(&indexes[i]->index, sizeof(indexes[i]->index), 1, fp_index);
+		fwrite(&indexes[i]->index, sizeof(uint64_t), 1, fp_index);
 		free(indexes[i]->name);
 		free(indexes[i]);
 	}
@@ -71,7 +70,7 @@ int main(int argc, char * argv[]) {
 }
 void append_and_close_into_file(FILE * input_file, FILE * output_file) {
    	int ch;
-	while ((ch = getc(input_file)) != EOF) {
+	while ((ch = fgetc(input_file)) != EOF) {
 		fputc(ch, output_file);
 	}
 	fclose(input_file);
