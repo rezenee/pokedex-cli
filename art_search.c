@@ -31,7 +31,7 @@ int main(int argc, char * argv[]) {
         fseek(fp_ascii, indexes[i]->index, SEEK_SET);
         fread(&ascii_len, sizeof(uint64_t), 1, fp_ascii);
         fread(ascii_art, 1, ascii_len, fp_ascii);
-        printf("%s\n", ascii_art)
+        printf("%s\n", ascii_art);
     }
     // free the shit
     for(int i = 0; i< pkm_count; i++) {
