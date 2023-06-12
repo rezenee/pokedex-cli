@@ -35,20 +35,21 @@ int main(int argc, char* argv[]) {
         indexes[i] = pkm;
     }
     fclose(fp_index);
+
     char * file_path_before_name = strdup("json_data/");
     char * file_name = malloc(512);
-
     FILE * fp_csv = fopen("pokemon.csv", "wb");
+    // create csv entry for each pokemon. write to output file.
     for(int i = 0; i < pkm_count; i++) {
+        // constructing the filename
         memset(file_name, 0, 512);
         strcat(file_name, file_path_before_name);
         strcat(file_name, indexes[i]->name);
         strcat(file_name, ".json");
-        char * csv_entry = process_json(file_name, indexes, pkm_count);
 
+        char * csv_entry = process_json(file_name, indexes, pkm_count);
         strcat(csv_entry, "\n");
         fwrite(csv_entry, strlen(csv_entry), 1, fp_csv);
-        printf("%s\n", csv_entry);
     }
 
     fclose(fp_csv);
@@ -191,6 +192,7 @@ char * process_json(char * filename, INDEX_T** indexes, size_t total_indexes) {
         strcat(string, number_string);
         strcat(string, ",");
 
+        // find the index to the ascii data. add to field
         INDEX_T **found_index = bsearch(name->valuestring, indexes, total_indexes, sizeof(INDEX_T*), sort_comp);
         memset(number_string, 0, 12);
         sprintf(number_string, "%d", found_index[0]->index);
