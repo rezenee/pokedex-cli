@@ -1,16 +1,18 @@
 EXES = art_parser art_search json_parser
-OBJECTS = art_parser.o art_search.o json_parser.o
+SRCS = art_parser.c art_search.c json_parser.c
 CFLAGS = -g -std=gnu11
+
 all: $(EXES)
 
-json_parser : json_parser.o
-	gcc -o json_parser cJSON.c $(CFLAGS) json_parser.o
-art_parser : art_parser.o
-	gcc -o art_parser $(CFLAGS) art_parser.o
-art_search : art_search.o
-	gcc -o art_search $(CFLAGS) art_search.o
+json_parser : json_parser.c
+	gcc $(CFLAGS) -o json_parser json_parser.c cJSON.c && rm -f json_parser.o
 
-$(OBJECTS) : 
+art_parser : art_parser.c
+	gcc $(CFLAGS) -o art_parser art_parser.c && rm -f art_parser.o
+
+art_search : art_search.c
+	gcc $(CFLAGS) -o art_search art_search.c && rm -f art_search.o
+
 .PHONY : clean
 clean :
-	rm $(EXES) $(OBJECTS)
+	rm -f $(EXES) $(SRCS:.c=.o)
