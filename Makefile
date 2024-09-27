@@ -1,18 +1,20 @@
-EXES = art_parser art_search json_parser
-SRCS = art_parser.c art_search.c json_parser.c
+EXES = pre_parser parser_a2 search_a2 parser_a1 csv_shrink
+SRCS = pre_parser.c parser_a2.c search_a2.c parser_a1.c csv_shrink.c
 CFLAGS = -g -std=gnu11
 
 all: $(EXES)
 
-json_parser : json_parser.c
-	gcc $(CFLAGS) -o json_parser json_parser.c cJSON.c && rm -f json_parser.o
-
-art_parser : art_parser.c
-	gcc $(CFLAGS) -o art_parser art_parser.c && rm -f art_parser.o
-
-art_search : art_search.c
-	gcc $(CFLAGS) -o art_search art_search.c && rm -f art_search.o
+csv_shrink : csv_shrink.c
+	gcc $(CFLAGS) -o csv_shrink csv_shrink.c && rm -f csv_shrink.o
+search_a2 : search_a2.c
+	gcc $(CFLAGS) -o search_a2 search_a2.c && rm -f search_a2.o
+parser_a2 : parser_a2.c
+	gcc $(CFLAGS) -o parser_a2 parser_a2.c && rm -f parser_a2.o
+parser_a1: parser_a1.c
+	gcc $(CFLAGS) -o parser_a1 parser_a1.c && rm -f parser_a1.o
+pre_parser : pre_parser.c
+	gcc $(CFLAGS)  -o pre_parser pre_parser.c data/cJSON.c -lcurl && rm -f pre_parser.o
 
 .PHONY : clean
 clean :
-	rm -f $(EXES) $(SRCS:.c=.o)
+	rm -f $(EXES) $(SRCS:.c=.o) *.bin *.csv
