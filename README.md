@@ -1,10 +1,10 @@
 ![](./web/demo.gif)
 
-COMPILING:
+##BUILDING
 to compile you will need to install curl. On debian systems you may use: sudo apt install libcurl4-gnutls-dev.
 this project also uses cJSON, but it is included in the repo. Finally, simply run make.
 
-USAGE:
+##USAGE
 
 To generate files necessary for a1/ a2, call ./pre_parser. it will read through every file in data, downloading jsons for the pokemon, and creating ability.bin with them. then it creates abilities.csv and pokemon.csv. if you want to change the pokemon that are used, remove the ascii art, as this is the root of all the data. also remove the corresponding .csvs.   
 
